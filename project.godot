@@ -1,4 +1,11 @@
 ; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
 config_version=5
 
 [application]
@@ -31,7 +38,6 @@ pointing/emulate_touch_from_mouse=true
 
 2d/default_gravity=1100.0
 2d/default_linear_damp=0.0
-common/physics_ticks_per_second=60
 2d/solver/solver_iterations=32
 
 [rendering]

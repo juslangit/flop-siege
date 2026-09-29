@@ -1,0 +1,11 @@
+# Godot 4 — editor cache and imported assets, all regenerated locally
+.godot/
+
+# Web builds — made by tools/build_web.sh, uploaded to itch.io, never committed
+/build/
+
+# Secrets — never commit
+.env
+
+# macOS
+.DS_Store

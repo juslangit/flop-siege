@@ -64,6 +64,7 @@ var aim_dots: Node2D
 var moat: Node2D
 var camera: Camera2D
 var bg_texture: Texture2D
+var bg_top := Color("7ec4e6")
 
 # HUD
 var hud: CanvasLayer
@@ -85,8 +86,10 @@ var stars_shown := 0
 func _ready() -> void:
 	randomize()
 	_load_progress()
-	if ResourceLoader.exists("res://assets/art/bg-valley.png"):
-		bg_texture = load("res://assets/art/bg-valley.png")
+	# Codex's painted sky (art/concept/bg-sky.png); the drawn one is the fallback.
+	if ResourceLoader.exists("res://assets/art/bg-sky.png"):
+		bg_texture = load("res://assets/art/bg-sky.png")
+		bg_top = bg_texture.get_image().get_pixel(8, 8)
 	camera = Camera2D.new()
 	camera.position = Vector2(360, 640)
 	add_child(camera)
@@ -399,9 +402,15 @@ func _draw_backdrop(c: Node2D) -> void:
 	c.draw_polygon(PackedVector2Array([Vector2(-200, -700), Vector2(920, -700), Vector2(920, 1000), Vector2(-200, 1000)]),
 		PackedColorArray([sky_top, sky_top, sky_low, sky_low]))
 	if bg_texture:
+		# Tall phones see above and beside the painting: continue its sky there.
+		c.draw_rect(Rect2(-200, -700, 1120, 710), bg_top)
 		c.draw_texture_rect(bg_texture, Rect2(0, 0, 720, 1280), false)
-		c.draw_rect(Rect2(-200, 1270, 1120, 800), Color("6fae4f"))
-		return
+	else:
+		_draw_sky(c)
+	_draw_land(c)
+
+
+func _draw_sky(c: Node2D) -> void:
 	# Sun and clouds.
 	c.draw_circle(Vector2(600, 150), 58, Color("fff3c4"))
 	c.draw_circle(Vector2(600, 150), 46, Color("ffe07a"))
@@ -414,6 +423,9 @@ func _draw_backdrop(c: Node2D) -> void:
 		hills.append(Vector2(x, 780 + sin(i * 1.3) * 60 - (i % 3) * 20))
 	hills.append(Vector2(920, 1000))
 	c.draw_colored_polygon(hills, Color("a9cf9a"))
+
+
+func _draw_land(c: Node2D) -> void:
 	# The ravine floor between the two hills.
 	c.draw_rect(Rect2(-200, VALLEY_Y, 1120, 900), Color("6fae4f"))
 	c.draw_rect(Rect2(-200, VALLEY_Y - 4, 1120, 8), OUTLINE)
